@@ -44,7 +44,10 @@ import java.text.DateFormat;
 import java.util.Date;
 
 
-
+class Constants
+{
+    static int REQUESTCODE_GUARDSTARTSHIFT = 1;
+}
 
 class SendLocationDataToServerTask extends AsyncTask<String, Void, Integer> {
 
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity
         implements LocationAssistant.Listener
 {
 
+
+    private String mCurrentShiftGuardCode = "";
     private Boolean bLocationAccuracyHasGoneBelow20Once = false;
     private PowerManager.WakeLock mOnPatrolWakeLock;
     private LocationAssistant assistant;
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity
     Button btnFusedLocation;
     TextView tvLocation;
     LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
+    //GoogleApiClient mGoogleApiClient;
     Location mCurrentLocation;
     String mLastUpdateTime;
     Date mLastUpdateTimeObj;
@@ -113,6 +118,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         assistant.onActivityResult(requestCode, resultCode);
+
+        if (requestCode == Constants.REQUESTCODE_GUARDSTARTSHIFT)
+        {
+            // Get the code that the guard entered.
+            String guardCode = data.getStringExtra("GUARDCODE");
+            mCurrentShiftGuardCode = guardCode;
+            Toast.makeText(this, guardCode, Toast.LENGTH_LONG);
+        }
     }
 
     @Override
@@ -172,15 +185,21 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+
+
     }
+
+
 
     @Override
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop fired ..............");
-        mGoogleApiClient.disconnect();
-        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
+        //mGoogleApiClient.disconnect();
+        //Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
     }
+
+
 
     private void updateUI() throws IOException {
         Log.d(TAG, "UI update initiated .............");
@@ -284,6 +303,12 @@ public class MainActivity extends AppCompatActivity
         //bindService(intent, this, Context.BIND_AUTO_CREATE);
 
         //assistant.start();
+
+        if (mCurrentShiftGuardCode == "")
+        {
+            Intent loginIntent = new Intent(this, GuardStartShiftActivity.class);
+            startActivityForResult(loginIntent, Constants.REQUESTCODE_GUARDSTARTSHIFT);
+        }
     }
 
 

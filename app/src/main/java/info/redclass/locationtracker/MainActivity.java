@@ -127,12 +127,6 @@ public class MainActivity extends AppCompatActivity
 
 
         setContentView(R.layout.activity_main);
-        //tvLocation = (TextView) findViewById(R.id.tvLocation);
-
-    //tvLocation.setKeepScreenOn(true);
-
-    //this.startService()
-
     }
 
     @Override
@@ -161,22 +155,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-
-        //mGoogleApiClient.connect();
-
-        /*if (mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
-            Log.d(TAG, "Location update resumed .....................");
-        }*/
-
-        /*if (assistant == null)
-        {
-            assistant = new LocationAssistant(this, this, LocationAssistant.Accuracy.HIGH, 1000, false);
-        }*/
-
-
-
-
     }
 
 
@@ -185,47 +163,7 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop fired ..............");
-        //mGoogleApiClient.disconnect();
-        //Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
     }
-
-
-
-    /*private void updateUI() throws IOException {
-        Log.d(TAG, "UI update initiated .............");
-
-        if (null != mCurrentLocation) {
-
-            String deviceID = Build.SERIAL;
-            String accuracy = String.valueOf(mCurrentLocation.getAccuracy()).toString();
-            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + "2018-01-01";
-
-            if (bLocationAccuracyHasGoneBelow20Once == true || (mCurrentLocation.hasAccuracy() && mCurrentLocation.getAccuracy() <= 20)) {
-                new SendLocationDataToServerTask().execute(urlLocation);
-
-
-                if (tvLocation != null) {
-
-                    String lat = String.valueOf(mCurrentLocation.getLatitude());
-                    String lng = String.valueOf(mCurrentLocation.getLongitude());
-                    tvLocation.setText("At Time: " + mLastUpdateTime + "\n" +
-                            "Serial: " + deviceID + "\n" +
-                            "Latitude: " + lat + "\n" +
-                            "Longitude: " + lng + "\n" +
-                            "Accuracy: " + mCurrentLocation.getAccuracy() + "\n" +
-                            "Provider: " + mCurrentLocation.getProvider());
-                }
-            }else
-            {
-                tvLocation.setText("Not sending location due to insufficient accuracy.");
-            }
-        } else {
-            Log.d(TAG, "location is null ...............");
-        }
-
-    }*/
-
-
 
     @Override
     protected void onPause() {
@@ -234,30 +172,9 @@ public class MainActivity extends AppCompatActivity
         //assistant.stop();
     }
 
-    /*protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, (com.google.android.gms.location.LocationListener) this);
-        Log.d(TAG, "Location update stopped .......................");
-    }*/
-
     @Override
     public void onResume() {
         super.onResume();
-        /*if (mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
-            Log.d(TAG, "Location update resumed .....................");
-        }*/
-
-        //Intent intent= new Intent(this, LocalLocationService.class);
-        //bindService(intent, this, Context.BIND_AUTO_CREATE);
-
-        //assistant.start();
-
-        /*if (mCurrentShiftGuardCode == "")
-        {
-            Intent loginIntent = new Intent(this, GuardStartShiftActivity.class);
-            startActivityForResult(loginIntent, Constants.REQUESTCODE_GUARDSTARTSHIFT);
-        }*/
     }
 
 

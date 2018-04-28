@@ -13,7 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
@@ -48,7 +51,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             assistant = new LocationAssistant(this, this, LocationAssistant.Accuracy.HIGH, 1000, false);
             assistant.start();
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            mOnPatrolWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
+            mOnPatrolWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "MyWakelockTag");
             mOnPatrolWakeLock.acquire();
         }
     }
@@ -130,7 +133,16 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
             String deviceID = Build.SERIAL;
             String accuracy = String.valueOf(mCurrentLocation.getAccuracy()).toString();
-            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + "2018-01-01";
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar c = Calendar.getInstance();
+            String formattedDate = df.format(c.getTime());
+
+
+            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/?date=" + formattedDate;
+            urlLocation = urlLocation.replace(" ", "%20");
+
+            //URLEncoder.encode(urlLocation, urlLocation);
 
             if (bLocationAccuracyHasGoneBelow20Once == true || (mCurrentLocation.hasAccuracy() && mCurrentLocation.getAccuracy() <= 20)) {
                 new SendLocationDataToServerTask().execute(urlLocation);

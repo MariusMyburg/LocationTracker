@@ -7,28 +7,65 @@
     tools:context=".ShiftHomeActivity">
 
     <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/sharkpng"/>
+        android:src="@drawable/sharkpng" />
 
     <TextView
         android:id="@+id/txtOnShift"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="On Shift: "
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/txtShiftStartDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="Started: "
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="35dp" />
+        app:layout_constraintTop_toBottomOf="@+id/txtOnShift" />
+
+    <Button
+        android:id="@+id/btnStartPatrol"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="288dp"
+        android:alpha="0.9"
+        android:onClick="OnStartPatrolButtonClicked"
+        android:text="Start Patrol"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView" />
+
+    <Button
+        android:id="@+id/btnEndShift"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:alpha="0.9"
+        android:onClick="OnEndShiftButtonClicked"
+        android:text="End Shift"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStartPatrol" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="This area will contain information about the current shift."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView" />
 
 </android.support.constraint.ConstraintLayout>

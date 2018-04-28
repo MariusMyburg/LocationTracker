@@ -1,8 +1,16 @@
 package info.redclass.locationtracker;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class ShiftHomeActivity extends AppCompatActivity {
 
@@ -19,5 +27,39 @@ public class ShiftHomeActivity extends AppCompatActivity {
         String guardCode = getIntent().getStringExtra("GuardCode");
         TextView txtOnShift = findViewById(R.id.txtOnShift);
         txtOnShift.setText("Guard on Shift: " + guardCode);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        String formattedDate = df.format(c.getTime());
+        TextView txtShiftStartDateTime = findViewById(R.id.txtShiftStartDateTime);
+        txtShiftStartDateTime.setText("Shift Started: " + formattedDate);
     }
+
+    public void OnStartPatrolButtonClicked(View view)
+    {
+        startPatrol();
+    }
+
+    public void OnEndShiftButtonClicked(View view)
+    {
+        finish();
+    }
+
+    private void startPatronButtonClicked(View view)
+    {
+        startPatrol();
+    }
+
+    private void endPatronButtonClicked(View view)
+    {
+        //endPatrol();
+    }
+
+    private void startPatrol()
+    {
+        Intent shiftOnPatrolIntent = new Intent(this, ShiftOnPatrolActivity.class);
+        startActivity(shiftOnPatrolIntent);
+    }
+
+
 }

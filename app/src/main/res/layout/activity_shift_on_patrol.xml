@@ -6,4 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ShiftOnPatrolActivity">
 
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sharkpng" />
+
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView2" />
+
+    <Button
+        android:id="@+id/btnEndPatrol"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="OnFinishPatrolButtonClicked"
+        android:text="Patrol Done"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

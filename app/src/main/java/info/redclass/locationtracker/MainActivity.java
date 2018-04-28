@@ -67,25 +67,25 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
 
 
 public class MainActivity extends AppCompatActivity
-        implements LocationAssistant.Listener
+        //implements LocationAssistant.Listener
 {
 
 
     private String mCurrentShiftGuardCode = "";
     private Boolean bLocationAccuracyHasGoneBelow20Once = false;
     private PowerManager.WakeLock mOnPatrolWakeLock;
-    private LocationAssistant assistant;
+    //private LocationAssistant assistant;
 
     private static final String TAG = "LocationActivity";
     private static final long INTERVAL = 1000 * 1;
     private static final long FASTEST_INTERVAL = 200;
     Button btnFusedLocation;
-    TextView tvLocation;
+    //TextView tvLocation;
     LocationRequest mLocationRequest;
     //GoogleApiClient mGoogleApiClient;
-    Location mCurrentLocation;
-    String mLastUpdateTime;
-    Date mLastUpdateTimeObj;
+    //Location mCurrentLocation;
+    //String mLastUpdateTime;
+    //Date mLastUpdateTimeObj;
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -96,12 +96,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        assistant.onPermissionsUpdated(requestCode, grantResults);
+        //assistant.onPermissionsUpdated(requestCode, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        assistant.onActivityResult(requestCode, resultCode);
+        //assistant.onActivityResult(requestCode, resultCode);
 
         if (requestCode == Constants.REQUESTCODE_GUARDSTARTSHIFT)
         {
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
 
 
         setContentView(R.layout.activity_main);
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
+        //tvLocation = (TextView) findViewById(R.id.tvLocation);
 
     //tvLocation.setKeepScreenOn(true);
 
@@ -169,10 +169,10 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "Location update resumed .....................");
         }*/
 
-        if (assistant == null)
+        /*if (assistant == null)
         {
             assistant = new LocationAssistant(this, this, LocationAssistant.Accuracy.HIGH, 1000, false);
-        }
+        }*/
 
 
 
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private void updateUI() throws IOException {
+    /*private void updateUI() throws IOException {
         Log.d(TAG, "UI update initiated .............");
 
         if (null != mCurrentLocation) {
@@ -223,56 +223,15 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "location is null ...............");
         }
 
-    }
+    }*/
 
-    public void OnStartStopPatrolButtonClicked(View view)
-    {
-        if (((Button)view).getText().toString().equals("Start Patrol"))
-        {
-            startPatrol();
-            ((Button)view).setText("End Patrol");
-        }else
-        {
-            endPatrol();
-            ((Button)view).setText("Start Patrol");
-            tvLocation.setText("Not on patrol.");
-        }
-    }
 
-    private void startPatronButtonClicked(View view)
-    {
-        startPatrol();
-    }
-
-    private void endPatronButtonClicked(View view)
-    {
-        endPatrol();
-    }
-
-    private void startPatrol()
-    {
-        PowerManager pm = (PowerManager)this.getSystemService(Context.POWER_SERVICE);
-        mOnPatrolWakeLock = pm.newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
-                TAG);
-        mOnPatrolWakeLock.acquire();
-
-        assistant.start();
-
-    }
-
-    private void endPatrol()
-    {
-        assistant.stop();
-
-        mOnPatrolWakeLock.release();
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
         //stopLocationUpdates();
-        assistant.stop();
+        //assistant.stop();
     }
 
     /*protected void stopLocationUpdates() {
@@ -294,67 +253,24 @@ public class MainActivity extends AppCompatActivity
 
         //assistant.start();
 
-        if (mCurrentShiftGuardCode == "")
+        /*if (mCurrentShiftGuardCode == "")
+        {
+            Intent loginIntent = new Intent(this, GuardStartShiftActivity.class);
+            startActivityForResult(loginIntent, Constants.REQUESTCODE_GUARDSTARTSHIFT);
+        }*/
+    }
+
+
+
+    public void OnStartShiftButtonClicked(View view)
+    {
+        //if (mCurrentShiftGuardCode == "")
         {
             Intent loginIntent = new Intent(this, GuardStartShiftActivity.class);
             startActivityForResult(loginIntent, Constants.REQUESTCODE_GUARDSTARTSHIFT);
         }
     }
 
-
-
-    @Override
-    public void onNewLocationAvailable(Location location) {
-        mCurrentLocation = location;
-        try {
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            mLastUpdateTimeObj = new Date();
-
-            if (location.getAccuracy() <= 20)
-            {
-                bLocationAccuracyHasGoneBelow20Once = true;
-            }
-
-            updateUI();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onMockLocationsDetected(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
-
-    }
-
-    @Override
-    public void onError(LocationAssistant.ErrorType type, String message) {
-
-    }
-
-    @Override
-    public void onNeedLocationPermission() {
-
-    }
-
-    @Override
-    public void onExplainLocationPermission() {
-
-    }
-
-    @Override
-    public void onLocationPermissionPermanentlyDeclined(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
-
-    }
-
-    @Override
-    public void onNeedLocationSettingsChange() {
-
-    }
-
-    @Override
-    public void onFallBackToSystemSettings(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
-
-    }
 
 
 }

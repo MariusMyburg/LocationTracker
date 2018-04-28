@@ -35,7 +35,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".GuardStartShiftActivity"></activity>
+        <activity android:name=".GuardStartShiftActivity" />
+        <activity android:name=".ShiftHomeActivity" />
+        <activity android:name=".ShiftOnPatrolActivity"></activity>
     </application>
 
 </manifest>

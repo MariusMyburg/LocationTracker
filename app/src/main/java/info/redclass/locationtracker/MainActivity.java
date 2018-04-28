@@ -1,22 +1,13 @@
 package info.redclass.locationtracker;
 
-import android.Manifest;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,18 +18,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
@@ -49,11 +32,11 @@ class Constants
     static int REQUESTCODE_GUARDSTARTSHIFT = 1;
 }
 
-class SendLocationDataToServerTask extends AsyncTask<String, Void, Integer> {
+class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
 
     private Exception exception;
 
-    protected Integer doInBackground(String... urls) {
+    protected String doInBackground(String... urls) {
         try {
             URL url = new URL(urls[0]);
 
@@ -63,8 +46,9 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, Integer> {
             connection.setConnectTimeout(5000);
             connection.setRequestMethod("GET");
             connection.connect();
-            int statusCode = connection.getResponseCode();
-            return statusCode;
+            //int statusCode = connection.getResponseCode();
+            String msg = connection.getResponseMessage();
+            return msg;
         } catch (Exception e) {
             this.exception = e;
 
@@ -72,7 +56,7 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, Integer> {
             //is.close();
         }
 
-        return 0;
+        return "GetError";
     }
 
     protected void onPostExecute() {
@@ -121,10 +105,16 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == Constants.REQUESTCODE_GUARDSTARTSHIFT)
         {
-            // Get the code that the guard entered.
-            String guardCode = data.getStringExtra("GUARDCODE");
-            mCurrentShiftGuardCode = guardCode;
-            Toast.makeText(this, guardCode, Toast.LENGTH_LONG);
+            if (resultCode == RESULT_OK) {
+                // Get the code that the guard entered.
+                String guardCode = data.getStringExtra("GUARDCODE");
+                mCurrentShiftGuardCode = guardCode;
+                Toast.makeText(this, guardCode, Toast.LENGTH_LONG).show();
+
+                Intent shiftStartedIntent = new Intent(this, ShiftHomeActivity.class);
+                shiftStartedIntent.putExtra("GuardCode", guardCode);
+                startActivity(shiftStartedIntent);
+            }
         }
     }
 

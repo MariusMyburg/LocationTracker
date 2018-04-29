@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 public class GuardStartShiftActivity extends AppCompatActivity {
@@ -20,25 +23,35 @@ public class GuardStartShiftActivity extends AppCompatActivity {
 
     public void onStartShiftButtonClicked(View view)
     {
+        EditText guardCodeText = findViewById(R.id.guardCodeText);
+
         String deviceID = Build.SERIAL;
-        String guardCode = "1234";
-        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftStartData/" + deviceID + "/" + guardCode;
+        String guardCode = guardCodeText.getText().toString();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        String formattedDate = df.format(c.getTime());
+
+        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftStartData/" + deviceID + "/" + guardCode  + "/?StartTime=" + formattedDate;
+        urlLocation = urlLocation.replace(" ", "%20");
 
         try {
             String response = new SendLocationDataToServerTask().execute(urlLocation).get();
+
+            Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+
             if (response == "Success")
             {
                 Intent intent = new Intent();
-                EditText guardCodeText = findViewById(R.id.guardCodeText);
-                intent.putExtra("GUARDCODE", guardCodeText.getText().toString());
+
+                intent.putExtra("GUARDCODE", guardCode);
                 setResult(RESULT_OK, intent);
                 finish();
-            }else
+            }else // "There is no guard with such code."
             {
                 Intent intent = new Intent();
-                EditText guardCodeText = findViewById(R.id.guardCodeText);
-                intent.putExtra("GUARDCODE", guardCodeText.getText().toString());
-                setResult(RESULT_OK, intent);
+                intent.putExtra("GUARDCODE", "");
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
         } catch (InterruptedException e) {

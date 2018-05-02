@@ -107,12 +107,14 @@ public class MainActivity extends AppCompatActivity
         {
             if (resultCode == RESULT_OK) {
                 // Get the code that the guard entered.
+                String guardName = data.getStringExtra("GUARDNAME");
                 String guardCode = data.getStringExtra("GUARDCODE");
                 mCurrentShiftGuardCode = guardCode;
                 Toast.makeText(this, guardCode, Toast.LENGTH_LONG).show();
 
                 Intent shiftStartedIntent = new Intent(this, ShiftHomeActivity.class);
-                shiftStartedIntent.putExtra("GuardCode", guardCode);
+                shiftStartedIntent.putExtra("GUARDNAME", guardName);
+                shiftStartedIntent.putExtra("GUARDCODE", guardCode);
                 startActivity(shiftStartedIntent);
             }
         }

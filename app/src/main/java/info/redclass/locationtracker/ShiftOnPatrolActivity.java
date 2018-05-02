@@ -139,8 +139,10 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             String formattedDate = df.format(c.getTime());
 
 
-            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/?date=" + formattedDate;
+            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + formattedDate;
             urlLocation = urlLocation.replace(" ", "%20");
+            urlLocation = urlLocation.replace(":", "!");
+            urlLocation = urlLocation.replace("http!", "http:");
 
             //URLEncoder.encode(urlLocation, urlLocation);
 

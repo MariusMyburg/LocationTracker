@@ -32,27 +32,53 @@ public class GuardStartShiftActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         String formattedDate = df.format(c.getTime());
 
-        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftStartData/" + deviceID + "/" + guardCode  + "/?StartTime=" + formattedDate;
+        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftStartData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
         urlLocation = urlLocation.replace(" ", "%20");
+        urlLocation = urlLocation.replace(":", "!");
+        urlLocation = urlLocation.replace("http!", "http:");
 
         try {
             String response = new SendLocationDataToServerTask().execute(urlLocation).get();
 
-            Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, response, Toast.LENGTH_LONG).show();
 
-            if (response == "Success")
+            if (response.startsWith("Guard Name: ")) // Guard Name: Klingon
             {
                 Intent intent = new Intent();
-
+                String guardName = response.substring(12);
                 intent.putExtra("GUARDCODE", guardCode);
+                intent.putExtra("GUARDNAME", guardName);
                 setResult(RESULT_OK, intent);
                 finish();
-            }else // "There is no guard with such code."
+            }else if (response.equals("There is no guard with such code.")) // "There is no guard with such code."
             {
-                Intent intent = new Intent();
-                intent.putExtra("GUARDCODE", "");
-                setResult(RESULT_CANCELED, intent);
-                finish();
+                Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+            }else if (response.equals("A shift has already been started, you cannot start a new one."))
+            {
+                //Toast.makeText(this, response + "\n" + "TODO end the shift?", Toast.LENGTH_LONG).show();
+
+                //String deviceID = Build.SERIAL;
+                //String guardCode = getIntent().getStringExtra("GUARDNAME");
+
+                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                //Calendar c = Calendar.getInstance();
+                formattedDate = df.format(c.getTime());
+
+                urlLocation = "http://redclass.info/ShiftData/SubmitShiftEndData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
+                urlLocation = urlLocation.replace(" ", "%20");
+                urlLocation = urlLocation.replace(":", "!");
+                urlLocation = urlLocation.replace("http!", "http:");
+
+
+                try {
+                    response = new SendLocationDataToServerTask().execute(urlLocation).get();
+
+                    onStartShiftButtonClicked(view);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

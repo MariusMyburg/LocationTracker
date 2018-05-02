@@ -2,15 +2,18 @@ package info.redclass.locationtracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 public class ShiftHomeActivity extends AppCompatActivity {
 
@@ -24,7 +27,7 @@ public class ShiftHomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String guardCode = getIntent().getStringExtra("GuardCode");
+        String guardCode = getIntent().getStringExtra("GUARDNAME");
         TextView txtOnShift = findViewById(R.id.txtOnShift);
         txtOnShift.setText("Guard on Shift: " + guardCode);
 
@@ -42,6 +45,28 @@ public class ShiftHomeActivity extends AppCompatActivity {
 
     public void OnEndShiftButtonClicked(View view)
     {
+        String deviceID = Build.SERIAL;
+        String guardCode = getIntent().getStringExtra("GUARDCODE");
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        String formattedDate = df.format(c.getTime());
+
+        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftEndData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
+        urlLocation = urlLocation.replace(" ", "%20");
+        urlLocation = urlLocation.replace(":", "!");
+        urlLocation = urlLocation.replace("http!", "http:");
+
+        String response = null;
+        try {
+            response = new SendLocationDataToServerTask().execute(urlLocation).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(this, response, Toast.LENGTH_LONG).show();
         finish();
     }
 

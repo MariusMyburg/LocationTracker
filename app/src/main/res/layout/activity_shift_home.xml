@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShiftHomeActivity">
+    tools:context=".ShiftHomeActivity"
+    android:background="#3298ba">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/lion" />
+        android:src="@drawable/blackshark" />
 
     <TextView
         android:id="@+id/txtOnShift"
@@ -38,7 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:layout_marginTop="288dp"
-        android:alpha="0.9"
+        android:alpha="0.85"
         android:onClick="OnStartPatrolButtonClicked"
         android:text="Start Patrol"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +51,7 @@
         android:id="@+id/btnEndShift"
         android:layout_width="0dp"
         android:layout_height="110dp"
-        android:alpha="0.9"
+        android:alpha="0.85"
         android:onClick="OnEndShiftButtonClicked"
         android:text="End Shift"
         app:layout_constraintEnd_toEndOf="parent"

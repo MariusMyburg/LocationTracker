@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShiftOnPatrolActivity">
+    tools:context=".ShiftOnPatrolActivity"
+    android:background="#3298ba">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/appCompatImageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/lion" />
+        android:src="@drawable/blackshark" />
 
     <TextView
         android:id="@+id/tvLocation"
@@ -27,9 +28,34 @@
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:layout_marginBottom="8dp"
+        android:alpha="0.85"
         android:onClick="OnFinishPatrolButtonClicked"
         android:text="Patrol Done"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.85"
+        android:onClick="OnTakePhotoButtonClicked"
+        android:text="Photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.85"
+        android:background="#85FF0000"
+        android:text="Emergency"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

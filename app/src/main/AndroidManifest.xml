@@ -6,11 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -30,14 +30,21 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".LocalLocationService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity android:name=".GuardStartShiftActivity" />
         <activity android:name=".ShiftHomeActivity" />
         <activity android:name=".ShiftOnPatrolActivity"></activity>
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="info.redclass.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
     </application>
 
 </manifest>

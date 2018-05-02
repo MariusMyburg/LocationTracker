@@ -4,25 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GuardStartShiftActivity">
+    tools:context=".GuardStartShiftActivity"
+    android:background="#3298ba">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/blackshark" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:layout_marginBottom="16dp"
+        android:alpha="0.85"
         android:onClick="onStartShiftButtonClicked"
         android:text="Start Shift"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.945"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/lion" />
 
     <TextView
         android:id="@+id/textView"
@@ -41,7 +43,7 @@
         android:id="@+id/guardCodeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="72dp"
         android:ems="10"
         android:inputType="text|textPassword"
         app:layout_constraintEnd_toEndOf="parent"

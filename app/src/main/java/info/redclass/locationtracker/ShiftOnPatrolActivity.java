@@ -2,9 +2,15 @@ package info.redclass.locationtracker;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.PowerManager;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +18,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -22,6 +33,9 @@ import java.util.Date;
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
 
     private static final String TAG = "ShiftOnPatrolActivity";
+
+    String mCurrentPhotoPath;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     private LocationAssistant assistant;
     Location mCurrentLocation;
@@ -171,12 +185,74 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
     }
 
-
     public void OnFinishPatrolButtonClicked(View view)
     {
         finish();
     }
 
+    public void OnTakePhotoButtonClicked(View view)
+    {
+        dispatchTakePictureIntent();
+    }
 
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "info.redclass.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //mImageView.setImageBitmap(imageBitmap);
+            try {
+            File f = new File(mCurrentPhotoPath);
+            byte[] fileData = new byte[(int) f.length()];
+            DataInputStream dis = new DataInputStream(new FileInputStream(f));
+            dis.readFully(fileData);
+            dis.close();
+
+            // Send fileData!
+                // TODO
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
 
 }

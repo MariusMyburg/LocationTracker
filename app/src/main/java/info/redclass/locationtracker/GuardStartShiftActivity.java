@@ -40,7 +40,7 @@ public class GuardStartShiftActivity extends AppCompatActivity {
         try {
             String response = new SendLocationDataToServerTask().execute(urlLocation).get();
 
-            //Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, response, Toast.LENGTH_LONG).show();
 
             if (response.startsWith("Guard Name: ")) // Guard Name: Klingon
             {

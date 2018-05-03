@@ -1,5 +1,6 @@
 package info.redclass.locationtracker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.preference.PreferenceActivity;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
+
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
 
@@ -90,7 +96,10 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
     @Override
     public void onNeedLocationPermission() {
+        assistant.requestLocationPermission();
 
+        assistant.stop();
+        assistant.start();
     }
 
     @Override
@@ -249,18 +258,53 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                 urlLocation = urlLocation.replace("localhost!", "localhost:");
 
                 try {
-                    String returned = new SendLocationDataToServerTask().execute(urlLocation, "data").get();
 
-                    Toast.makeText(this, returned, Toast.LENGTH_LONG).show();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                    //String filedataString = new String(fileData);
+                    //String returned = new SendLocationDataToServerTask().execute(urlLocation, filedataString).get();
+
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    RequestParams params = new RequestParams();
+                    params.put("photo", f);
+
+                    client.post(urlLocation, params, new AsyncHttpResponseHandler() {
+
+                        @Override
+                        public void onStart() {
+                            // called before request is started
+                            Toast.makeText(getApplicationContext(), "Uploading Photo...", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Toast.makeText(getApplicationContext(), "Photo Uploaded", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(getApplicationContext(), "Photo Upload Failure: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onRetry(int retryNo) {
+                            // called when request is retried
+                            Toast.makeText(getApplicationContext(), "Photo Upload Retry", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+
+                    //Toast.makeText(this, returned, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void SendFile()
+    {
+        //AsyncHttpClient
     }
 
     private File createImageFile() throws IOException {

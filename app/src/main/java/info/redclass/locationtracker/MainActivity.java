@@ -20,7 +20,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -36,19 +40,41 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
 
     private Exception exception;
 
-    protected String doInBackground(String... urls) {
+    protected String doInBackground(String... data) {
         try {
-            URL url = new URL(urls[0]);
+            URL url = new URL(data[0]);
 
-            //URL url = new URL(urlLocation);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setConnectTimeout(5000);
-            connection.setRequestMethod("GET");
-            connection.connect();
-            //int statusCode = connection.getResponseCode();
-            String msg = connection.getResponseMessage();
-            return msg;
+            if (data.length == 1) { // Normal GET
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setConnectTimeout(5000);
+                connection.setRequestMethod("GET");
+                connection.connect();
+                //int statusCode = connection.getResponseCode();
+                String msg = connection.getResponseMessage();
+                return msg;
+            }else if (data.length == 2) // POST
+            {
+                String postdata = data[1]; //data to post
+
+                OutputStream out = null;
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+
+                writer.write(postdata);
+
+                writer.flush();
+
+                writer.close();
+
+                out.close();
+
+                urlConnection.connect();
+            }
         } catch (Exception e) {
             this.exception = e;
 

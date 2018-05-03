@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
 
@@ -233,6 +234,13 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
             // Send fileData!
                 // TODO
+                try {
+                    String returned = new SendLocationDataToServerTask().execute("url", "data").get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

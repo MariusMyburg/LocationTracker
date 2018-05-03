@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -233,9 +235,23 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             dis.close();
 
             // Send fileData!
-                // TODO
+
+                String deviceID = Build.SERIAL;
+
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Calendar c = Calendar.getInstance();
+                String formattedDate = df.format(c.getTime());
+
+                String urlLocation = "http://redclass.info/ShiftData/SubmitShiftPhotoData/" + deviceID + "/" + formattedDate;
+                urlLocation = urlLocation.replace(" ", "%20");
+                urlLocation = urlLocation.replace(":", "!");
+                urlLocation = urlLocation.replace("http!", "http:");
+                urlLocation = urlLocation.replace("localhost!", "localhost:");
+
                 try {
-                    String returned = new SendLocationDataToServerTask().execute("url", "data").get();
+                    String returned = new SendLocationDataToServerTask().execute(urlLocation, "data").get();
+
+                    Toast.makeText(this, returned, Toast.LENGTH_LONG).show();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

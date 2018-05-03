@@ -60,9 +60,9 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
                 OutputStream out = null;
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+                Thread.sleep(100);
                 out = new BufferedOutputStream(urlConnection.getOutputStream());
-
+                Thread.sleep(100);
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 
                 writer.write(postdata);
@@ -74,9 +74,13 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
                 out.close();
 
                 urlConnection.connect();
+
+                return "Photo uploaded.";
             }
         } catch (Exception e) {
             this.exception = e;
+
+            return e.toString();
 
         } finally {
             //is.close();

@@ -9,13 +9,13 @@ import java.util.List;
 
 @Dao
 public interface DB_GuardDao {
-    @Query("SELECT * FROM guards")
+    @Query("SELECT * FROM db_guard")
     List<DB_Guard> getAll();
 
-    @Query("SELECT * FROM guards WHERE uid IN (:guardIds)")
+    @Query("SELECT * FROM db_guard WHERE uid IN (:guardIds)")
     List<DB_Guard> loadAllByIds(int[] guardIds);
 
-    @Query("SELECT * FROM guards WHERE name LIKE :name LIMIT 1")
+    @Query("SELECT * FROM db_guard WHERE name LIKE :name LIMIT 1")
     DB_Guard findByName(String name);
 
     @Insert

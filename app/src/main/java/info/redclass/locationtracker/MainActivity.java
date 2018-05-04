@@ -1,5 +1,6 @@
 package info.redclass.locationtracker;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity
         //implements LocationAssistant.Listener
 {
 
+    public DB_AppDatabase mAppDatabase = Room.databaseBuilder(getApplicationContext(),
+            DB_AppDatabase.class, "redclass_database").build();
 
     private String mCurrentShiftGuardCode = "";
     private Boolean bLocationAccuracyHasGoneBelow20Once = false;

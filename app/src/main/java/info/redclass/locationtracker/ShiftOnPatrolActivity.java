@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -23,9 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -243,6 +246,39 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             dis.readFully(fileData);
             dis.close();
 
+
+            // Resize the image
+                File fsmall = null;
+                Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath());
+// original measurements
+                int origWidth = b.getWidth();
+                int origHeight = b.getHeight();
+
+                final int destWidth = 1024;//or the width you need
+
+                if(origWidth > destWidth){
+                    // picture is wider than we want it, we calculate its target height
+                    int destHeight = origHeight/( origWidth / destWidth ) ;
+                    // we create an scaled bitmap so it reduces the image, not just trim it
+                    Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    // compress to the format you want, JPEG, PNG...
+                    // 70 is the 0-100 quality percentage
+                    b2.compress(Bitmap.CompressFormat.JPEG,70 , outStream);
+                    // we save the file, at least until we have made use of it
+                    //fsmall = new File(Environment.getExternalStorageDirectory() + File.separator + "upload.jpg");
+                    fsmall = new File(mCurrentPhotoPath);
+
+                    fsmall.createNewFile();
+                    //write the bytes in file
+                    FileOutputStream fo = new FileOutputStream(fsmall);
+                    fo.write(outStream.toByteArray());
+                    // remember close de FileOutput
+                    fo.close();
+                }
+
+
+
             // Send fileData!
 
                 String deviceID = Build.SERIAL;
@@ -264,7 +300,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
-                    params.put("photo", f);
+                    params.put("photo", fsmall);
 
                     client.post(urlLocation, params, new AsyncHttpResponseHandler() {
 

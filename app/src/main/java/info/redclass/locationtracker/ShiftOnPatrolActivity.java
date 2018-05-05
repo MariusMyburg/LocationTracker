@@ -41,6 +41,14 @@ import java.util.concurrent.ExecutionException;
 import com.loopj.android.http.*;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
 
@@ -254,7 +262,9 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                 int origWidth = b.getWidth();
                 int origHeight = b.getHeight();
 
-                final int destWidth = 1024;//or the width you need
+                final int destWidth = 400;//or the width you need
+
+                byte[] imageBytes = null;
 
                 if(origWidth > destWidth){
                     // picture is wider than we want it, we calculate its target height
@@ -272,7 +282,10 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                     fsmall.createNewFile();
                     //write the bytes in file
                     FileOutputStream fo = new FileOutputStream(fsmall);
-                    fo.write(outStream.toByteArray());
+
+                    imageBytes = outStream.toByteArray();
+
+                    fo.write(imageBytes);
                     // remember close de FileOutput
                     fo.close();
                 }
@@ -300,9 +313,23 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
-                    params.put("photo", fsmall);
 
-                    client.post(urlLocation, params, new AsyncHttpResponseHandler() {
+                    FileInputStream fi = new FileInputStream(fsmall);
+                    FileBody bin = new FileBody(fsmall, "image/jpeg");
+                    //params.put("photo", fsmall, "image/jpg");
+
+
+                    //ByteArrayEntity entity = new ByteArrayEntity(imageBytes);
+                    //entity.setContentType("image/jpeg");
+
+                    String asBase64 = Base64.encodeToString(imageBytes, 0, imageBytes.length, Base64.DEFAULT);
+                    asBase64 = asBase64.replace("\r\n", ""); //This fixes everything
+
+                    StringEntity entity = new StringEntity(asBase64);
+
+
+                    //client.post(urlLocation, params, new AsyncHttpResponseHandler() {
+                    client.post(null, urlLocation, entity, "image/jpeg", new AsyncHttpResponseHandler() {
 
                         @Override
                         public void onStart() {

@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity
         //implements LocationAssistant.Listener
 {
 
-    public DB_AppDatabase mAppDatabase = Room.databaseBuilder(getApplicationContext(),
-            DB_AppDatabase.class, "redclass_database").build();
+    //public DB_AppDatabase mAppDatabase = Room.databaseBuilder(getApplicationContext(),
+    //        DB_AppDatabase.class, "redclass_database").build();
 
     private String mCurrentShiftGuardCode = "";
     private Boolean bLocationAccuracyHasGoneBelow20Once = false;

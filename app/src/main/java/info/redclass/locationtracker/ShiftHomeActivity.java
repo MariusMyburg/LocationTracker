@@ -27,9 +27,9 @@ public class ShiftHomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String guardCode = getIntent().getStringExtra("GUARDNAME");
+        String guardName = getIntent().getStringExtra("GUARDNAME");
         TextView txtOnShift = findViewById(R.id.txtOnShift);
-        txtOnShift.setText("Guard on Shift: " + guardCode);
+        txtOnShift.setText("Guard on Shift: " + guardName);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar c = Calendar.getInstance();
@@ -47,12 +47,18 @@ public class ShiftHomeActivity extends AppCompatActivity {
     {
         String deviceID = Build.SERIAL;
         String guardCode = getIntent().getStringExtra("GUARDCODE");
+        String lat = String.valueOf(0);//mCurrentLocation.getLatitude());
+        String lng = String.valueOf(0);//mCurrentLocation.getLongitude());
+        String accuracy = String.valueOf(0);//mCurrentLocation.getAccuracy());
+        String eventType = "SHIFTEND";
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar c = Calendar.getInstance();
         String formattedDate = df.format(c.getTime());
 
-        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftEndData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
+
+        String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+
         urlLocation = urlLocation.replace(" ", "%20");
         urlLocation = urlLocation.replace(":", "!");
         urlLocation = urlLocation.replace("http!", "http:");

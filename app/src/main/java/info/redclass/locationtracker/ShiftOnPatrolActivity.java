@@ -169,14 +169,21 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
         if (null != mCurrentLocation) {
 
             String deviceID = Build.SERIAL;
-            String accuracy = String.valueOf(mCurrentLocation.getAccuracy()).toString();
+            String guardCode = getIntent().getStringExtra("GUARDCODE");
+            String lat = String.valueOf(mCurrentLocation.getLatitude());
+            String lng = String.valueOf(mCurrentLocation.getLongitude());
+            String accuracy = String.valueOf(mCurrentLocation.getAccuracy());
+            String eventType = "LOCATION";
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Calendar c = Calendar.getInstance();
             String formattedDate = df.format(c.getTime());
 
 
-            String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + formattedDate;
+            String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+
+
+            //String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + formattedDate;
             urlLocation = urlLocation.replace(" ", "%20");
             urlLocation = urlLocation.replace(":", "!");
             urlLocation = urlLocation.replace("http!", "http:");
@@ -189,8 +196,8 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
                 if (tvLocation != null) {
 
-                    String lat = String.valueOf(mCurrentLocation.getLatitude());
-                    String lng = String.valueOf(mCurrentLocation.getLongitude());
+                    //String lat = String.valueOf(mCurrentLocation.getLatitude());
+                    //String lng = String.valueOf(mCurrentLocation.getLongitude());
                     tvLocation.setText("At Time: " + mLastUpdateTime + "\n" +
                             "Serial: " + deviceID + "\n" +
                             "Latitude: " + lat + "\n" +
@@ -295,12 +302,20 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             // Send fileData!
 
                 String deviceID = Build.SERIAL;
+                String guardCode = getIntent().getStringExtra("GUARDCODE");
+                String lat = String.valueOf(mCurrentLocation.getLatitude());
+                String lng = String.valueOf(mCurrentLocation.getLongitude());
+                String accuracy = String.valueOf(mCurrentLocation.getAccuracy());
+                String eventType = "PHOTO";
 
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Calendar c = Calendar.getInstance();
                 String formattedDate = df.format(c.getTime());
 
-                String urlLocation = "http://redclass.info/ShiftData/SubmitShiftPhotoData/" + deviceID + "/" + formattedDate;
+
+                String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+
+                //String urlLocation = "http://redclass.info/ShiftData/SubmitShiftPhotoData/" + deviceID + "/" + formattedDate;
                 urlLocation = urlLocation.replace(" ", "%20");
                 urlLocation = urlLocation.replace(":", "!");
                 urlLocation = urlLocation.replace("http!", "http:");

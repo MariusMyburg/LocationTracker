@@ -26,13 +26,18 @@ public class GuardStartShiftActivity extends AppCompatActivity {
         EditText guardCodeText = findViewById(R.id.guardCodeText);
 
         String deviceID = Build.SERIAL;
-        String guardCode = guardCodeText.getText().toString();
+        String guardCode = guardCodeText.getText().toString(); //getIntent().getStringExtra("GUARDCODE");
+        String lat = String.valueOf(0);//mCurrentLocation.getLatitude());
+        String lng = String.valueOf(0);//mCurrentLocation.getLongitude());
+        String accuracy = String.valueOf(0);//mCurrentLocation.getAccuracy());
+        String eventType = "SHIFTSTART";
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar c = Calendar.getInstance();
         String formattedDate = df.format(c.getTime());
 
-        String urlLocation = "http://redclass.info/ShiftData/SubmitShiftStartData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
+
+        String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
         urlLocation = urlLocation.replace(" ", "%20");
         urlLocation = urlLocation.replace(":", "!");
         urlLocation = urlLocation.replace("http!", "http:");
@@ -64,11 +69,11 @@ public class GuardStartShiftActivity extends AppCompatActivity {
                 //Calendar c = Calendar.getInstance();
                 formattedDate = df.format(c.getTime());
 
-                urlLocation = "http://redclass.info/ShiftData/SubmitShiftEndData/" + deviceID + "/" + guardCode  + "/" + formattedDate;
+                eventType = "SHIFTEND";
+                urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
                 urlLocation = urlLocation.replace(" ", "%20");
                 urlLocation = urlLocation.replace(":", "!");
                 urlLocation = urlLocation.replace("http!", "http:");
-
 
                 try {
                     response = new SendLocationDataToServerTask().execute(urlLocation).get();

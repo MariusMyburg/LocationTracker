@@ -49,7 +49,7 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setConnectTimeout(5000);
-                connection.setRequestMethod("GET");
+                connection.setRequestMethod("POST");
                 connection.connect();
                 //int statusCode = connection.getResponseCode();
                 String msg = connection.getResponseMessage();
@@ -57,6 +57,11 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
             }else if (data.length == 2) // POST
             {
                 String postdata = data[1]; //data to post
+
+                if (postdata == "")
+                {
+                    postdata = "nig";
+                }
 
                 OutputStream out = null;
 
@@ -75,9 +80,9 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
                 out.close();
 
                 urlConnection.connect();
-                //String message = urlConnection.getResponseMessage();
+                String message = urlConnection.getResponseMessage();
 
-                return "Photo uploaded.";
+                return message;
             }
         } catch (Exception e) {
             this.exception = e;

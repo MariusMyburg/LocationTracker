@@ -37,13 +37,13 @@ public class GuardStartShiftActivity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
 
 
-        String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+        String urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
         urlLocation = urlLocation.replace(" ", "%20");
         urlLocation = urlLocation.replace(":", "!");
         urlLocation = urlLocation.replace("http!", "http:");
 
         try {
-            String response = new SendLocationDataToServerTask().execute(urlLocation).get();
+            String response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
 
             Toast.makeText(this, response, Toast.LENGTH_LONG).show();
 
@@ -70,13 +70,13 @@ public class GuardStartShiftActivity extends AppCompatActivity {
                 formattedDate = df.format(c.getTime());
 
                 eventType = "SHIFTEND";
-                urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+                urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
                 urlLocation = urlLocation.replace(" ", "%20");
                 urlLocation = urlLocation.replace(":", "!");
                 urlLocation = urlLocation.replace("http!", "http:");
 
                 try {
-                    response = new SendLocationDataToServerTask().execute(urlLocation).get();
+                    response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
 
                     onStartShiftButtonClicked(view);
                 } catch (InterruptedException e) {

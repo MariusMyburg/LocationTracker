@@ -57,7 +57,7 @@ public class ShiftHomeActivity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
 
 
-        String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+        String urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
 
         urlLocation = urlLocation.replace(" ", "%20");
         urlLocation = urlLocation.replace(":", "!");
@@ -65,7 +65,7 @@ public class ShiftHomeActivity extends AppCompatActivity {
 
         String response = null;
         try {
-            response = new SendLocationDataToServerTask().execute(urlLocation).get();
+            response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -89,6 +89,8 @@ public class ShiftHomeActivity extends AppCompatActivity {
     private void startPatrol()
     {
         Intent shiftOnPatrolIntent = new Intent(this, ShiftOnPatrolActivity.class);
+        String guardCode = getIntent().getStringExtra("GUARDCODE");
+        shiftOnPatrolIntent.putExtra("GUARDCODE", guardCode);
         startActivity(shiftOnPatrolIntent);
     }
 

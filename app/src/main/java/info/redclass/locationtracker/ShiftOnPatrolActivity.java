@@ -180,7 +180,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             String formattedDate = df.format(c.getTime());
 
 
-            String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+            String urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
 
 
             //String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + formattedDate;
@@ -191,7 +191,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             //URLEncoder.encode(urlLocation, urlLocation);
 
             if (bLocationAccuracyHasGoneBelow20Once == true || (mCurrentLocation.hasAccuracy() && mCurrentLocation.getAccuracy() <= 20)) {
-                new SendLocationDataToServerTask().execute(urlLocation);
+                new SendLocationDataToServerTask().execute(urlLocation, "");
 
 
                 if (tvLocation != null) {
@@ -235,7 +235,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-
+                Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -269,7 +269,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                 int origWidth = b.getWidth();
                 int origHeight = b.getHeight();
 
-                final int destWidth = 400;//or the width you need
+                final int destWidth = 800;//or the width you need
 
                 byte[] imageBytes = null;
 
@@ -277,7 +277,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                     // picture is wider than we want it, we calculate its target height
                     int destHeight = origHeight/( origWidth / destWidth ) ;
                     // we create an scaled bitmap so it reduces the image, not just trim it
-                    Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
+                    Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, true);
                     ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                     // compress to the format you want, JPEG, PNG...
                     // 70 is the 0-100 quality percentage
@@ -313,7 +313,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                 String formattedDate = df.format(c.getTime());
 
 
-                String urlLocation = "http://www.redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+                String urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
 
                 //String urlLocation = "http://redclass.info/ShiftData/SubmitShiftPhotoData/" + deviceID + "/" + formattedDate;
                 urlLocation = urlLocation.replace(" ", "%20");
@@ -323,14 +323,21 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
                 try {
 
-                    //String filedataString = new String(fileData);
-                    //String returned = new SendLocationDataToServerTask().execute(urlLocation, filedataString).get();
+                    {
+                        String asBase64 = Base64.encodeToString(imageBytes, 0, imageBytes.length, Base64.DEFAULT);
+                        asBase64 = asBase64.replace("\r\n", ""); //This fixes everything
+                        //String filedataString = new String(fileData);
+                        String returned = new SendLocationDataToServerTask().execute(urlLocation, asBase64).get();
 
-                    AsyncHttpClient client = new AsyncHttpClient();
+                        return;
+                    }
+
+                    /*AsyncHttpClient client = new AsyncHttpClient();
+
                     RequestParams params = new RequestParams();
 
                     FileInputStream fi = new FileInputStream(fsmall);
-                    FileBody bin = new FileBody(fsmall, "image/jpeg");
+                    //FileBody bin = new FileBody(fsmall, "image/jpeg");
                     //params.put("photo", fsmall, "image/jpg");
 
 
@@ -369,13 +376,15 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                         }
                     });
 
-
+*/
                     //Toast.makeText(this, returned, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -3,10 +3,14 @@ package info.redclass.locationtracker;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
-@Entity
+@Entity(tableName = "guard_table")
 public class DB_Guard {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
+
     private int uid;
 
     @ColumnInfo(name = "name")

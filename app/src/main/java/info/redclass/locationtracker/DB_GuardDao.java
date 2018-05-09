@@ -1,5 +1,6 @@
 package info.redclass.locationtracker;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -9,13 +10,13 @@ import java.util.List;
 
 @Dao
 public interface DB_GuardDao {
-    @Query("SELECT * FROM db_guard")
-    List<DB_Guard> getAll();
+    @Query("SELECT * FROM guard_table")
+    LiveData<List<DB_Guard>> getAll();
 
-    @Query("SELECT * FROM db_guard WHERE uid IN (:guardIds)")
-    List<DB_Guard> loadAllByIds(int[] guardIds);
+    @Query("SELECT * FROM guard_table WHERE id IN (:guardIds)")
+    LiveData<List<DB_Guard>> loadAllByIds(int[] guardIds);
 
-    @Query("SELECT * FROM db_guard WHERE name LIKE :name LIMIT 1")
+    @Query("SELECT * FROM guard_table WHERE name LIKE :name LIMIT 1")
     DB_Guard findByName(String name);
 
     @Insert

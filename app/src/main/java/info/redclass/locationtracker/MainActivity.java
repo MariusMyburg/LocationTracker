@@ -107,8 +107,7 @@ public class MainActivity extends AppCompatActivity
         //implements LocationAssistant.Listener
 {
 
-    //public DB_AppDatabase mAppDatabase = Room.databaseBuilder(getApplicationContext(),
-    //        DB_AppDatabase.class, "redclass_database").build();
+    private RedclassRepository mRepository;
 
     private String mCurrentShiftGuardCode = "";
     private Boolean bLocationAccuracyHasGoneBelow20Once = false;
@@ -194,8 +193,11 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
+        mRepository = new RedclassRepository(getApplication());
+        mRepository.getAllGuards();
     }
 
 

@@ -11,10 +11,10 @@ import java.util.List;
 @Dao
 public interface DB_GuardDao {
     @Query("SELECT * FROM guard_table")
-    LiveData<List<DB_Guard>> getAll();
+    List<DB_Guard> getAll();
 
     @Query("SELECT * FROM guard_table WHERE id IN (:guardIds)")
-    LiveData<List<DB_Guard>> loadAllByIds(int[] guardIds);
+    List<DB_Guard> loadAllByIds(int[] guardIds);
 
     @Query("SELECT * FROM guard_table WHERE name LIKE :name LIMIT 1")
     DB_Guard findByName(String name);

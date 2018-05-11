@@ -1,5 +1,6 @@
 package info.redclass.locationtracker;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +31,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 class Constants
@@ -192,12 +195,44 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private class RepositoryTask extends AsyncTask<String, Void, RedclassRepository>
+    {
+
+        @Override
+        protected RedclassRepository doInBackground(String... params) {
+            return new RedclassRepository(getApplication());
+        }
+
+        @Override
+        protected void onPostExecute(RedclassRepository redclassRepository) {
+            super.onPostExecute(redclassRepository);
+        }
+    }
+
+
     @Override
     public void onStart()
     {
         super.onStart();
-        mRepository = new RedclassRepository(getApplication());
-        mRepository.getAllGuards();
+
+        try {
+            mRepository = new RepositoryTask().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        //mRepository = new RedclassRepository(getApplication());
+        //LiveData<List<DB_Guard>> guards = mRepository.getAllGuards();
+        //Toast.makeText(this, guards.getValue().get(0).getName(), Toast.LENGTH_LONG).show();
+
+        //DB_Guard n = new DB_Guard();
+        //n.setUid(3);
+        //n.setName("Marius");
+        //mRepository.insert(n);
+
+        List<DB_Guard> guards = mRepository.getAllGuards();
     }
 
 

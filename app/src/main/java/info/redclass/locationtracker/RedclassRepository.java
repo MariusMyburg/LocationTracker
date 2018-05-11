@@ -10,7 +10,7 @@ import java.util.List;
 public class RedclassRepository {
 
     private DB_GuardDao mWordDao;
-    private LiveData<List<DB_Guard>> mAllWords;
+    private List<DB_Guard> mAllWords;
 
     RedclassRepository(Application application) {
         RedclassRoomDatabase db = RedclassRoomDatabase.getDatabase(application);
@@ -18,7 +18,7 @@ public class RedclassRepository {
         mAllWords = mWordDao.getAll();
     }
 
-    LiveData<List<DB_Guard>> getAllGuards() {
+    List<DB_Guard> getAllGuards() {
         return mAllWords;
     }
 

@@ -8,10 +8,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {DB_Guard.class}, version = 1)
+import info.redclass.locationtracker.DB.Guard;
+import info.redclass.locationtracker.DB.GuardDao;
+
+@Database(entities = {Guard.class}, version = 1)
 public abstract class RedclassRoomDatabase extends RoomDatabase
 {
-    public abstract DB_GuardDao guardDao();
+    public abstract GuardDao guardDao();
 
     private static RedclassRoomDatabase INSTANCE;
 
@@ -35,7 +38,7 @@ public abstract class RedclassRoomDatabase extends RoomDatabase
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
-        private final DB_GuardDao mDao;
+        private final GuardDao mDao;
 
         PopulateDbAsync(RedclassRoomDatabase db) {
             mDao = db.guardDao();
@@ -44,7 +47,7 @@ public abstract class RedclassRoomDatabase extends RoomDatabase
         @Override
         protected Void doInBackground(final Void... params) {
             //mDao.deleteAll();
-            DB_Guard word = new DB_Guard();
+            Guard word = new Guard();
             word.setName("Nigger");
             word.setGuardCode("test");
             word.setUid(1);

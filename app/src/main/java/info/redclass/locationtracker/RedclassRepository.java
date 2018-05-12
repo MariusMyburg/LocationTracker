@@ -6,11 +6,14 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import info.redclass.locationtracker.DB.Guard;
+import info.redclass.locationtracker.DB.GuardDao;
+
 
 public class RedclassRepository {
 
-    private DB_GuardDao mWordDao;
-    private List<DB_Guard> mAllWords;
+    private GuardDao mWordDao;
+    private List<Guard> mAllWords;
 
     RedclassRepository(Application application) {
         RedclassRoomDatabase db = RedclassRoomDatabase.getDatabase(application);
@@ -18,25 +21,25 @@ public class RedclassRepository {
         mAllWords = mWordDao.getAll();
     }
 
-    List<DB_Guard> getAllGuards() {
+    List<Guard> getAllGuards() {
         return mAllWords;
     }
 
 
-    public void insert (DB_Guard word) {
+    public void insert (Guard word) {
         new insertAsyncTask(mWordDao).execute(word);
     }
 
-    private static class insertAsyncTask extends AsyncTask<DB_Guard, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<Guard, Void, Void> {
 
-        private DB_GuardDao mAsyncTaskDao;
+        private GuardDao mAsyncTaskDao;
 
-        insertAsyncTask(DB_GuardDao dao) {
+        insertAsyncTask(GuardDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
-        protected Void doInBackground(final DB_Guard... params) {
+        protected Void doInBackground(final Guard... params) {
             mAsyncTaskDao.insertAll(params[0]);
             return null;
         }

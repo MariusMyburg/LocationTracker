@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import info.redclass.locationtracker.DB.Guard;
+
 
 class Constants
 {
@@ -223,16 +225,12 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        //mRepository = new RedclassRepository(getApplication());
-        //LiveData<List<DB_Guard>> guards = mRepository.getAllGuards();
-        //Toast.makeText(this, guards.getValue().get(0).getName(), Toast.LENGTH_LONG).show();
 
-        //DB_Guard n = new DB_Guard();
-        //n.setUid(3);
-        //n.setName("Marius");
-        //mRepository.insert(n);
+        Guard n = new Guard();
+        n.setName("Robin");
+        mRepository.insert(n);
 
-        List<DB_Guard> guards = mRepository.getAllGuards();
+        List<Guard> guards = mRepository.getAllGuards();
     }
 
 

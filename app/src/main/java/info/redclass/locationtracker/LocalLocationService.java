@@ -53,7 +53,7 @@ public class LocalLocationService extends Service implements LocationAssistant.L
             //String accuracy = "2";
             String urlLocation = "http://redclass.info/DeviceData/SubmitDeviceLocationData/" + deviceID + "/" + String.valueOf(mCurrentLocation.getLatitude()) + "/" + String.valueOf(mCurrentLocation.getLongitude()) + "/" + String.valueOf(mCurrentLocation.getBearing()) + "/" + accuracy + "/" + "2018-01-01";
 
-            new SendLocationDataToServerTask().execute(urlLocation);
+            new SendLocationDataToServerImmediatelyTask().execute(urlLocation);
             //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             //mLastUpdateTimeObj = new Date();
             //updateUI();

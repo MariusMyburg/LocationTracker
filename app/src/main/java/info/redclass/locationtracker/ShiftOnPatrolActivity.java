@@ -49,6 +49,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
 import cz.msebera.android.httpclient.entity.mime.content.FileBody;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import info.redclass.locationtracker.DB.Event;
 
 public class ShiftOnPatrolActivity extends AppCompatActivity implements LocationAssistant.Listener {
 
@@ -125,7 +126,7 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
 
     @Override
     public void onNeedLocationSettingsChange() {
-
+        assistant.changeLocationSettings();
     }
 
     @Override
@@ -191,7 +192,19 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
             //URLEncoder.encode(urlLocation, urlLocation);
 
             if (bLocationAccuracyHasGoneBelow20Once == true || (mCurrentLocation.hasAccuracy() && mCurrentLocation.getAccuracy() <= 20)) {
-                new SendLocationDataToServerTask().execute(urlLocation, "");
+                //new SendLocationDataToServerTask().execute(urlLocation, "");
+
+                Event newEvent = new Event();
+                newEvent.setDatetime(c.getTime().toString());
+                newEvent.setLatitude(mCurrentLocation.getLatitude());
+                newEvent.setLongitude(mCurrentLocation.getLongitude());
+                newEvent.setAccuracy(mCurrentLocation.getAccuracy());
+                newEvent.setGuardCode(guardCode);
+                newEvent.setEventtype("LOCATION");
+
+                //MainActivity.mInstance.getRepository().insert(newEvent);
+                //RedclassRoomDatabase.getDatabase(getApplicationContext()).eventDao().insertAll(newEvent);
+                new RedclassRoomDatabase.InsertEventAsync(RedclassRoomDatabase.getDatabase(getApplicationContext())).execute(newEvent);
 
 
                 if (tvLocation != null) {
@@ -327,57 +340,21 @@ public class ShiftOnPatrolActivity extends AppCompatActivity implements Location
                         String asBase64 = Base64.encodeToString(imageBytes, 0, imageBytes.length, Base64.DEFAULT);
                         asBase64 = asBase64.replace("\r\n", ""); //This fixes everything
                         //String filedataString = new String(fileData);
-                        String returned = new SendLocationDataToServerTask().execute(urlLocation, asBase64).get();
+                        //String returned = new SendLocationDataToServerTask().execute(urlLocation, asBase64).get();
+
+                        Event newEvent = new Event();
+                        newEvent.setDatetime(c.getTime().toString());
+                        newEvent.setLatitude(mCurrentLocation.getLatitude());
+                        newEvent.setLongitude(mCurrentLocation.getLongitude());
+                        newEvent.setAccuracy(mCurrentLocation.getAccuracy());
+                        newEvent.setGuardCode(guardCode);
+                        newEvent.setEventtype("PHOTO");
+                        newEvent.setPhoto(asBase64);
+                        MainActivity.mInstance.getRepository().insert(newEvent);
 
                         return;
                     }
 
-                    /*AsyncHttpClient client = new AsyncHttpClient();
-
-                    RequestParams params = new RequestParams();
-
-                    FileInputStream fi = new FileInputStream(fsmall);
-                    //FileBody bin = new FileBody(fsmall, "image/jpeg");
-                    //params.put("photo", fsmall, "image/jpg");
-
-
-                    //ByteArrayEntity entity = new ByteArrayEntity(imageBytes);
-                    //entity.setContentType("image/jpeg");
-
-                    String asBase64 = Base64.encodeToString(imageBytes, 0, imageBytes.length, Base64.DEFAULT);
-                    asBase64 = asBase64.replace("\r\n", ""); //This fixes everything
-
-                    StringEntity entity = new StringEntity(asBase64);
-
-
-                    //client.post(urlLocation, params, new AsyncHttpResponseHandler() {
-                    client.post(null, urlLocation, entity, "image/jpeg", new AsyncHttpResponseHandler() {
-
-                        @Override
-                        public void onStart() {
-                            // called before request is started
-                            Toast.makeText(getApplicationContext(), "Uploading Photo...", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            Toast.makeText(getApplicationContext(), "Photo Uploaded", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Toast.makeText(getApplicationContext(), "Photo Upload Failure: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onRetry(int retryNo) {
-                            // called when request is retried
-                            Toast.makeText(getApplicationContext(), "Photo Upload Retry", Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-*/
-                    //Toast.makeText(this, returned, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();

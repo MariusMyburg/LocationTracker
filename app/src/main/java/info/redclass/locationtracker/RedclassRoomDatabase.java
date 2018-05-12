@@ -8,13 +8,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import info.redclass.locationtracker.DB.Event;
+import info.redclass.locationtracker.DB.EventDao;
 import info.redclass.locationtracker.DB.Guard;
 import info.redclass.locationtracker.DB.GuardDao;
 
-@Database(entities = {Guard.class}, version = 1)
+@Database(entities = {Guard.class, Event.class}, version = 1)
 public abstract class RedclassRoomDatabase extends RoomDatabase
 {
     public abstract GuardDao guardDao();
+    public abstract EventDao eventDao();
 
     private static RedclassRoomDatabase INSTANCE;
 
@@ -33,6 +36,23 @@ public abstract class RedclassRoomDatabase extends RoomDatabase
             }
         }
         return INSTANCE;
+    }
+
+
+    public static class InsertEventAsync extends AsyncTask<Event, Void, Void> {
+
+        private final EventDao mDao;
+
+        InsertEventAsync(RedclassRoomDatabase db) {
+            mDao = db.eventDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Event... params) {
+            //mDao.deleteAll();
+            mDao.insertAll(params);
+            return null;
+        }
     }
 
 

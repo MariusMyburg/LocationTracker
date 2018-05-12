@@ -1,5 +1,6 @@
 package info.redclass.locationtracker;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
@@ -30,10 +31,13 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import info.redclass.locationtracker.DB.Event;
 import info.redclass.locationtracker.DB.Guard;
 
 
@@ -42,9 +46,7 @@ class Constants
     static int REQUESTCODE_GUARDSTARTSHIFT = 1;
 }
 
-class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
-
-    private Exception exception;
+class SendLocationDataToServerImmediatelyTask extends AsyncTask<String, Void, String> {
 
     protected String doInBackground(String... data) {
         try {
@@ -90,7 +92,7 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
                 return message;
             }
         } catch (Exception e) {
-            this.exception = e;
+            Exception exception = e;
 
             return e.toString();
 
@@ -107,10 +109,86 @@ class SendLocationDataToServerTask extends AsyncTask<String, Void, String> {
     }
 }
 
+class SendOldestEventDataRecordToServerTask extends AsyncTask<String, Void, String> {
+
+    protected String doInBackground(String... Params) {
+        try {
+
+            Event oldestEvent = MainActivity.mInstance.getRepository().getEventDao().getOldest();
+
+            String deviceID = Build.SERIAL;
+
+            String guardCode = oldestEvent.getGuardCode();
+            String lat = String.valueOf(oldestEvent.getLatitude());
+            String lng = String.valueOf(oldestEvent.getLongitude());
+            String accuracy = String.valueOf(oldestEvent.getAccuracy());
+            String eventType = oldestEvent.getEventtype();
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar c = Calendar.getInstance();
+            String formattedDate = df.format(c.getTime());
+
+            String urlLocation = "http://redclass.info/Event/SubmitEventData/" + formattedDate + "/" + deviceID + "/" + guardCode + "/" + lng + "/" + lat + "/" + accuracy + "/" + eventType;
+
+            //String urlLocation = "http://redclass.info/ShiftData/SubmitShiftPhotoData/" + deviceID + "/" + formattedDate;
+            urlLocation = urlLocation.replace(" ", "%20");
+            urlLocation = urlLocation.replace(":", "!");
+            urlLocation = urlLocation.replace("http!", "http:");
+            urlLocation = urlLocation.replace("localhost!", "localhost:");
+
+            URL url = new URL("");
+
+
+                String postdata = oldestEvent.getEventtype() == "PHOTO" ? oldestEvent.getPhoto() : ""; //data to post
+
+                if (postdata == "")
+                {
+                    postdata = "nig";
+                }
+
+                OutputStream out = null;
+
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                out = new BufferedOutputStream(urlConnection.getOutputStream());
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+
+                writer.write(postdata);
+
+                writer.flush();
+
+                writer.close();
+
+                out.close();
+
+                urlConnection.connect();
+                String message = urlConnection.getResponseMessage();
+
+                return message;
+
+        } catch (Exception e) {
+            Exception exception = e;
+
+            return e.toString();
+
+        } finally {
+            //is.close();
+        }
+    }
+
+    protected void onPostExecute() {
+        // TODO: check this.exception
+        // TODO: do something with the feed
+    }
+}
+
 
 public class MainActivity extends AppCompatActivity
         //implements LocationAssistant.Listener
 {
+
+    public static MainActivity mInstance;
 
     private RedclassRepository mRepository;
 
@@ -136,6 +214,13 @@ public class MainActivity extends AppCompatActivity
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
+
+
+    public RedclassRepository getRepository()
+    {
+        return mRepository;
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -172,6 +257,8 @@ public class MainActivity extends AppCompatActivity
 
 
         setContentView(R.layout.activity_main);
+
+        mInstance = this;
     }
 
     @Override
@@ -226,11 +313,11 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        Guard n = new Guard();
-        n.setName("Robin");
-        mRepository.insert(n);
+        //Guard n = new Guard();
+        //n.setName("Robin");
+        //mRepository.insert(n);
 
-        List<Guard> guards = mRepository.getAllGuards();
+        //List<Event> events = mRepository//.getEventDao().getAll();
     }
 
 

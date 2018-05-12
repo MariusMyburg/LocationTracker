@@ -65,7 +65,7 @@ public class ShiftHomeActivity extends AppCompatActivity {
 
         String response = null;
         try {
-            response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
+            response = new SendLocationDataToServerImmediatelyTask().execute(urlLocation, "").get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

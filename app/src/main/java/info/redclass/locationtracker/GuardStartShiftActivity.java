@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
+import info.redclass.locationtracker.DB.Event;
+
 public class GuardStartShiftActivity extends AppCompatActivity {
 
     @Override
@@ -43,7 +45,8 @@ public class GuardStartShiftActivity extends AppCompatActivity {
         urlLocation = urlLocation.replace("http!", "http:");
 
         try {
-            String response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
+            String response = new SendLocationDataToServerImmediatelyTask().execute(urlLocation, "").get();
+
 
             Toast.makeText(this, response, Toast.LENGTH_LONG).show();
 
@@ -76,12 +79,19 @@ public class GuardStartShiftActivity extends AppCompatActivity {
                 urlLocation = urlLocation.replace("http!", "http:");
 
                 try {
-                    response = new SendLocationDataToServerTask().execute(urlLocation, "").get();
+                    response = new SendLocationDataToServerImmediatelyTask().execute(urlLocation, "").get();
+                    //response = new Send().execute(urlLocation, "").get();
+                    /*Event newEvent = new Event();
+                    newEvent.setDatetime(c.getTime().toString());
+                    newEvent.setLatitude(0);
+                    newEvent.setLongitude(0);
+                    newEvent.setAccuracy(0);
+                    newEvent.setGuardCode(guardCode);
+                    newEvent.setEventtype("SHIFTEND");
+                    MainActivity.mInstance.getRepository().insert(newEvent);*/
 
                     onStartShiftButtonClicked(view);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

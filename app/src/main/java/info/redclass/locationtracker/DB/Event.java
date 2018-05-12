@@ -5,9 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
-
-import cz.msebera.android.httpclient.entity.StringEntity;
 
 @Entity(tableName = "event_table")
 public class Event {
@@ -17,7 +14,7 @@ public class Event {
     private int uid;
 
     @ColumnInfo(name = "datetime")
-    private Date datetime;
+    private String datetime;
 
     @ColumnInfo(name = "guardcode")
     private String guardCode;
@@ -34,11 +31,14 @@ public class Event {
     @ColumnInfo(name = "eventtype")
     private String eventtype;
 
+    @ColumnInfo(name = "photo")
+    private String photo;
+
 
     public int getUid() {
         return uid;
     }
-    public Date getDatetime() {
+    public String getDatetime() {
         return datetime;
     }
     public String getGuardCode() {
@@ -56,9 +56,12 @@ public class Event {
     public String getEventtype() {
         return eventtype;
     }
+    public String getPhoto() {
+        return photo;
+    }
 
     public void setUid(int uid) { this.uid = uid; }
-    public void setDatetime(Date datetime) {
+    public void setDatetime(String datetime) {
         this.datetime = datetime;
     }
     public void setGuardCode(String guardCode) {
@@ -69,6 +72,7 @@ public class Event {
     public void setLongitude(double longitude) { this.longitude = longitude; }
     public void setAccuracy(double accuracy) { this.accuracy = accuracy; }
     public void setEventtype(String eventtype) { this.eventtype = eventtype; }
+    public void setPhoto(String photo) { this.photo = photo; }
 
     // Roses are Red
     // Niggers are Black,

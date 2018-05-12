@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShiftOnPatrolActivity"
-    android:background="#3298ba">
+    android:background="#3A4652">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/appCompatImageView2"
@@ -28,6 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#84D02F"
         android:alpha="0.85"
         android:onClick="OnFinishPatrolButtonClicked"
         android:text="Patrol Done"
@@ -41,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="#84D02F"
         android:alpha="0.85"
         android:onClick="OnTakePhotoButtonClicked"
         android:text="Photo"

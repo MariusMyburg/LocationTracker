@@ -31,6 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="#84D02F"
         android:alpha="0.85"
         android:onClick="OnStartShiftButtonClicked"
         android:text="Start Shift"
